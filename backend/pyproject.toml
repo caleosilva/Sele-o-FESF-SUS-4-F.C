@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "unit: testes unitários sem I/O externo",
+    "integration: testes que exercitam a stack completa via HTTP",
+]
+addopts = "-v --tb=short"
