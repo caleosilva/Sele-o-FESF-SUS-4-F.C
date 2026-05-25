@@ -1,10 +1,3 @@
-"""Testes de integração para os endpoints de triagem (/triagens).
-
-Nota: O endpoint PATCH /consultas/{id}/status não existe no backend atual.
-O Zustand store possui `atualizarStatus`, mas o backend não tem rota correspondente.
-Recomenda-se implementar PATCH /triagens/{id}/cor e adicionar o teste aqui.
-"""
-
 import pytest
 
 pytestmark = pytest.mark.integration

@@ -1,5 +1,3 @@
-"""Testes unitários para geração e verificação de tokens JWT."""
-
 import pytest
 from datetime import timedelta as original_timedelta
 from jose import JWTError

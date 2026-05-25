@@ -1,11 +1,3 @@
-"""Testes unitários para a lógica de ordenação da fila de triagem.
-
-Verifica que TriagemRepository.get_fila() respeita a prioridade clínica:
-  vermelho (emergência) > laranja (muito urgente) > amarelo (urgente) > verde (pouco urgente)
-
-Dentro da mesma cor, a ordenação é FIFO por horário de chegada (created_at).
-"""
-
 import pytest
 from datetime import date, datetime, timedelta, timezone
 
@@ -50,7 +42,6 @@ def _make_triagem(db, paciente: Paciente, cor: CorRisco, delta_secs: int = 0) ->
     return t
 
 
-# ── Ordenação por prioridade ──────────────────────────────────────────────────
 
 def test_should_return_queue_ordered_vermelho_laranja_amarelo_verde(db):
     p1 = _make_paciente(db, "Verde")
@@ -58,7 +49,7 @@ def test_should_return_queue_ordered_vermelho_laranja_amarelo_verde(db):
     p3 = _make_paciente(db, "Laranja")
     p4 = _make_paciente(db, "Vermelho")
 
-    # Inseridos em ordem inversa à esperada para validar que a query ordena corretamente
+    # inseridos em ordem inversa à esperada para validar que a query ordena corretamente
     _make_triagem(db, p1, CorRisco.verde, delta_secs=0)
     _make_triagem(db, p2, CorRisco.amarelo, delta_secs=1)
     _make_triagem(db, p3, CorRisco.laranja, delta_secs=2)
@@ -86,7 +77,6 @@ def test_should_place_vermelho_before_all_others_regardless_of_arrival(db):
     assert fila[0].cor_risco == CorRisco.vermelho
 
 
-# ── FIFO dentro da mesma cor ──────────────────────────────────────────────────
 
 def test_should_order_same_color_by_arrival_time_fifo(db):
     p_primeiro = _make_paciente(db, "Chegou Primeiro")
@@ -111,12 +101,10 @@ def test_should_maintain_fifo_within_vermelho_color(db):
     fila_ids = [t.id for t in fila]
     triagem_ids = [t.id for t in triagens]
 
-    # A ordem de chegada deve ser preservada dentro da mesma cor
     posicoes = [fila_ids.index(tid) for tid in triagem_ids]
     assert posicoes == sorted(posicoes)
 
 
-# ── Fila vazia ────────────────────────────────────────────────────────────────
 
 def test_should_return_empty_list_when_no_triagens_exist(db):
     fila = TriagemRepository(db).get_fila()

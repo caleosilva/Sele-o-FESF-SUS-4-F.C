@@ -1,5 +1,3 @@
-"""Testes de integração para os endpoints de autenticação (/auth)."""
-
 import pytest
 
 pytestmark = pytest.mark.integration

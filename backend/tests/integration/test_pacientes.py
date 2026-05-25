@@ -1,5 +1,3 @@
-"""Testes de integração para os endpoints de pacientes (/pacientes)."""
-
 import pytest
 
 pytestmark = pytest.mark.integration

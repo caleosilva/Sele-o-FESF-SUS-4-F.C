@@ -108,13 +108,11 @@ def token_recepcionista(usuario_recepcionista):
 
 @pytest.fixture
 async def auth_client(async_client, token_enfermeiro):
-    """Client autenticado como enfermeiro (pode criar triagens)."""
     async_client.cookies.set("access_token", token_enfermeiro)
     return async_client
 
 
 @pytest.fixture
 async def recepcionista_client(async_client, token_recepcionista):
-    """Client autenticado como recepcionista (bloqueado em POST /triagens)."""
     async_client.cookies.set("access_token", token_recepcionista)
     return async_client

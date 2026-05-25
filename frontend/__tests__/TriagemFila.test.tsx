@@ -1,15 +1,7 @@
-/**
- * Testes do comportamento da fila de triagem consumindo o store Zustand real.
- *
- * Usa useTriagemStore.setState() para controlar o estado sem mocks de módulo,
- * validando que o componente renderiza e re-renderiza corretamente.
- */
-
 import { render, screen, act } from "@testing-library/react";
 import { useTriagemStore } from "@/store/triagemStore";
 import type { Triagem } from "@/store/triagemStore";
 
-/** Componente wrapper mínimo que espelha o consumo do store na página de triagem. */
 function FilaWrapper() {
   const fila = useTriagemStore((s) => s.fila);
 
@@ -47,13 +39,13 @@ beforeEach(() => {
   useTriagemStore.setState({ fila: [] });
 });
 
-describe("TriagemFila (store integration)", () => {
-  it("should show empty state message when queue is empty", () => {
+describe("TriagemFila (integração com store)", () => {
+  it("deve exibir mensagem de fila vazia quando não há pacientes", () => {
     render(<FilaWrapper />);
     expect(screen.getByText(/nenhum paciente na fila/i)).toBeInTheDocument();
   });
 
-  it("should render all patients present in the store", () => {
+  it("deve renderizar todos os pacientes presentes no store", () => {
     act(() => {
       useTriagemStore.setState({
         fila: [
@@ -69,7 +61,7 @@ describe("TriagemFila (store integration)", () => {
     expect(screen.getByText(/Carlos Ramos/)).toBeInTheDocument();
   });
 
-  it("should re-render the list when the store updates", () => {
+  it("deve re-renderizar a lista quando o store é atualizado", () => {
     render(<FilaWrapper />);
     expect(screen.getByText(/nenhum paciente na fila/i)).toBeInTheDocument();
 
@@ -83,7 +75,7 @@ describe("TriagemFila (store integration)", () => {
     expect(screen.queryByText(/nenhum paciente na fila/i)).not.toBeInTheDocument();
   });
 
-  it("should display the risk color alongside each patient name", () => {
+  it("deve exibir a cor de risco ao lado do nome de cada paciente", () => {
     act(() => {
       useTriagemStore.setState({
         fila: [
@@ -96,7 +88,7 @@ describe("TriagemFila (store integration)", () => {
     expect(screen.getByText(/laranja/i)).toBeInTheDocument();
   });
 
-  it("should render items in the order provided by the store", () => {
+  it("deve renderizar os itens na ordem fornecida pelo store", () => {
     act(() => {
       useTriagemStore.setState({
         fila: [

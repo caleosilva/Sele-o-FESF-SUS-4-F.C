@@ -1,5 +1,3 @@
-"""Testes unitários para validação dos schemas Pydantic."""
-
 import pytest
 from datetime import date, timedelta
 
@@ -11,7 +9,6 @@ from app.schemas.triagem import TriagemCreate
 
 pytestmark = pytest.mark.unit
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
 
 def _paciente_base(**kwargs) -> dict:
     return {
@@ -22,7 +19,6 @@ def _paciente_base(**kwargs) -> dict:
     }
 
 
-# ── Validação de CPF ──────────────────────────────────────────────────────────
 
 def test_should_raise_when_cpf_has_fewer_than_11_digits():
     with pytest.raises(ValidationError, match="11 dígitos"):
@@ -49,7 +45,6 @@ def test_should_normalize_cpf_stripping_spaces():
     assert paciente.cpf == "12345678901"
 
 
-# ── Validação de data de nascimento ──────────────────────────────────────────
 
 def test_should_raise_when_data_nascimento_is_in_the_future():
     future_date = date.today() + timedelta(days=1)
@@ -62,14 +57,13 @@ def test_should_accept_data_nascimento_equal_to_today():
     assert paciente.data_nascimento == date.today()
 
 
-# ── Validação de TriagemCreate ────────────────────────────────────────────────
 
 def test_should_raise_when_queixa_principal_is_too_short():
     with pytest.raises(ValidationError):
         TriagemCreate(
             paciente_id=1,
             cor_risco=CorRisco.verde,
-            queixa_principal="dor",  # menos de 5 chars
+            queixa_principal="dor",
         )
 
 
@@ -78,7 +72,7 @@ def test_should_raise_when_queixa_principal_is_too_long():
         TriagemCreate(
             paciente_id=1,
             cor_risco=CorRisco.verde,
-            queixa_principal="x" * 501,  # mais de 500 chars
+            queixa_principal="x" * 501,
         )
 
 

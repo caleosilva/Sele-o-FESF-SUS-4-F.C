@@ -1,10 +1,3 @@
-/**
- * Testes do componente LoginPage (app/login/page.tsx).
- *
- * Mocka o axios, o store de autenticação e next/navigation para testar
- * a lógica do componente de forma isolada.
- */
-
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "@/app/login/page";
@@ -33,18 +26,18 @@ beforeEach(() => {
 });
 
 describe("LoginPage", () => {
-  it("should render email and password input fields", () => {
+  it("deve renderizar os campos de e-mail e senha", () => {
     render(<LoginPage />);
     expect(screen.getByLabelText(/e-mail/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
   });
 
-  it("should render the submit button", () => {
+  it("deve renderizar o botão de envio", () => {
     render(<LoginPage />);
     expect(screen.getByRole("button", { name: /entrar/i })).toBeInTheDocument();
   });
 
-  it("should display an error message when credentials are invalid", async () => {
+  it("deve exibir mensagem de erro quando as credenciais são inválidas", async () => {
     (api.post as jest.Mock).mockRejectedValue({ response: { status: 401 } });
 
     render(<LoginPage />);
@@ -57,7 +50,7 @@ describe("LoginPage", () => {
     );
   });
 
-  it("should call authStore.login with user data on successful authentication", async () => {
+  it("deve chamar authStore.login com os dados do usuário ao autenticar com sucesso", async () => {
     (api.post as jest.Mock).mockResolvedValue({
       data: { email: "enfermeiro@fesf.gov.br", perfil: "enfermeiro" },
     });
@@ -75,7 +68,7 @@ describe("LoginPage", () => {
     );
   });
 
-  it("should redirect to /triagem after successful login", async () => {
+  it("deve redirecionar para /triagem após login bem-sucedido", async () => {
     (api.post as jest.Mock).mockResolvedValue({
       data: { email: "enfermeiro@fesf.gov.br", perfil: "enfermeiro" },
     });
@@ -88,7 +81,7 @@ describe("LoginPage", () => {
     await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/triagem"));
   });
 
-  it("should not show error message in the initial state", () => {
+  it("não deve exibir mensagem de erro no estado inicial", () => {
     render(<LoginPage />);
     expect(screen.queryByText(/e-mail ou senha incorretos/i)).not.toBeInTheDocument();
   });

@@ -1,11 +1,3 @@
-/**
- * Teste de integração do fluxo de login completo.
- *
- * Valida que o preenchimento do formulário → submit → resposta da API →
- * atualização do Zustand → redirecionamento funciona de ponta a ponta,
- * usando o store REAL (sem mock de módulo) para verificar o estado final.
- */
-
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "@/app/login/page";
@@ -23,12 +15,11 @@ jest.mock("next/navigation", () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
-  // Reseta o store Zustand real para estado inicial antes de cada teste
   useAuthStore.setState({ usuario: null });
 });
 
 describe("Fluxo de login (integração)", () => {
-  it("should store user credentials in Zustand after successful login", async () => {
+  it("deve salvar as credenciais do usuário no Zustand após login bem-sucedido", async () => {
     (api.post as jest.Mock).mockResolvedValue({
       data: { email: "enfermeiro@fesf.gov.br", perfil: "enfermeiro" },
     });
@@ -45,7 +36,7 @@ describe("Fluxo de login (integração)", () => {
     });
   });
 
-  it("should redirect to /triagem after successful login", async () => {
+  it("deve redirecionar para /triagem após login bem-sucedido", async () => {
     (api.post as jest.Mock).mockResolvedValue({
       data: { email: "medico@fesf.gov.br", perfil: "medico" },
     });
@@ -58,7 +49,7 @@ describe("Fluxo de login (integração)", () => {
     await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/triagem"));
   });
 
-  it("should not update Zustand store when login fails", async () => {
+  it("não deve atualizar o store Zustand quando o login falha", async () => {
     (api.post as jest.Mock).mockRejectedValue({ response: { status: 401 } });
 
     render(<LoginPage />);
@@ -70,11 +61,10 @@ describe("Fluxo de login (integração)", () => {
       expect(screen.getByText(/e-mail ou senha incorretos/i)).toBeInTheDocument()
     );
 
-    // O store deve permanecer sem usuário autenticado
     expect(useAuthStore.getState().usuario).toBeNull();
   });
 
-  it("should call POST /auth/login with the typed credentials", async () => {
+  it("deve chamar POST /auth/login com as credenciais digitadas", async () => {
     (api.post as jest.Mock).mockResolvedValue({
       data: { email: "recepcionista@fesf.gov.br", perfil: "recepcionista" },
     });

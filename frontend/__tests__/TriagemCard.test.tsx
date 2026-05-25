@@ -1,10 +1,3 @@
-/**
- * Testes do componente TriagemCard.
- *
- * Verifica renderização de nome, CPF formatado, badge de cor e queixa principal
- * para todos os quatro níveis de risco do protocolo Manchester.
- */
-
 import { render, screen } from "@testing-library/react";
 import { TriagemCard } from "@/components/dashboard/TriagemCard";
 import type { Triagem } from "@/store/triagemStore";
@@ -19,17 +12,17 @@ const BASE_TRIAGEM: Triagem = {
 };
 
 describe("TriagemCard", () => {
-  it("should render patient name", () => {
+  it("deve renderizar o nome do paciente", () => {
     render(<TriagemCard triagem={BASE_TRIAGEM} />);
     expect(screen.getByText("João Silva")).toBeInTheDocument();
   });
 
-  it("should render formatted CPF with mask", () => {
+  it("deve renderizar o CPF formatado com máscara", () => {
     render(<TriagemCard triagem={BASE_TRIAGEM} />);
     expect(screen.getByText(/123\.456\.789-01/)).toBeInTheDocument();
   });
 
-  it("should render the main complaint text", () => {
+  it("deve renderizar o texto da queixa principal", () => {
     render(<TriagemCard triagem={BASE_TRIAGEM} />);
     expect(
       screen.getByText("Dor torácica intensa com irradiação para o braço esquerdo")
@@ -42,16 +35,15 @@ describe("TriagemCard", () => {
     ["amarelo", "Amarelo"],
     ["verde", "Verde"],
   ] as const)(
-    "should render correct short label '%s' in the badge for risk color %s",
+    "deve renderizar o rótulo '%s' correto no badge para a cor de risco %s",
     (cor_risco, expectedLabel) => {
       render(<TriagemCard triagem={{ ...BASE_TRIAGEM, cor_risco }} />);
       expect(screen.getByText(expectedLabel)).toBeInTheDocument();
     }
   );
 
-  it("should render arrival time from created_at", () => {
+  it("deve renderizar o horário de chegada a partir de created_at", () => {
     render(<TriagemCard triagem={BASE_TRIAGEM} />);
-    // Verifica que algum texto de chegada está presente (formato varia por locale)
     expect(screen.getByText(/chegada/i)).toBeInTheDocument();
   });
 });
